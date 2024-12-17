@@ -21,6 +21,14 @@ module.exports.policies = {
   // Protect the dashboard route with token authentication
   AuthController: {
     'dashboard': 'isAuthenticated',
+  },
+  UserController: {
+    'profile': 'isAuthenticated',
+    'users': 'isAuthenticated',
+  },
+  EnterpriseController: {
+    'enterprise/*': 'isAuthenticated',
+    'createEnterprise': 'isAuthenticated',
   }
 
 };

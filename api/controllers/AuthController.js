@@ -6,18 +6,15 @@ module.exports = {
 
   dashboard: async function (req, res) {
     try {
-      const users = await User.find();
-      console.log("users", req.user)
       // Render the dashboard page with user data
-      // if (req.user) {
-      return res.view('pages/homepage', { userName: req.user.username, userRole: users?.role, });
-      // }
+      if (req.user.username) {
+        return res.view('pages/homepage', { userName: req.user.username, userRole: req.user?.role, });
+      }
     } catch (error) {
       return res.status(500).json({ error: 'Failed to load dashboard. Please try again.' });
     }
   },
 
-  // Show the login form
   login: function (req, res) {
     const token = req.cookies.authToken;
     jwt.verify(token, secretKey, (err, decoded) => {
@@ -25,7 +22,7 @@ module.exports = {
         return res.redirect('/');
       }
     });
-    return res.view('pages/login', { message: req.flash('message'), error: true });
+    return res.view('pages/login', { message: req.flash('message'), error: true, layout: './layouts/loginLayout' });
 
   },
 
@@ -53,7 +50,7 @@ module.exports = {
     });
     // return res.view('pages/registerForm');
 
-    return res.view('pages/registerForm', { message: "", error: true });
+    return res.view('pages/registerForm', { message: "", error: true, layout: './layouts/loginLayout' });
   },
 
   // Handle the login logic
@@ -70,8 +67,9 @@ module.exports = {
         res.status(401).redirect('/login');
       }
 
+      delete user.password
       // Create a JWT token
-      const token = jwt.sign({ id: user.id, email: user.email, role: user.role, username: user.username }, secretKey, { expiresIn: '1d' });
+      const token = jwt.sign({ ...user }, secretKey, { expiresIn: '1d' });
 
       // Set the token in an HTTP-only cookie
       res.cookie('authToken', token, {
@@ -85,6 +83,7 @@ module.exports = {
 
     } catch (error) {
       // Handle errors
+      console.log("err:userLogin", error)
       return res.status(500).json({ error: 'Server error. Please try again.' });
     }
   },
@@ -109,6 +108,8 @@ module.exports = {
         username: username,
         email: email,
         password: password,
+        created_on: new Date(),
+        updated_on: new Date()
       }).fetch();
 
       // Redirect to login after successful registration
@@ -116,8 +117,8 @@ module.exports = {
 
     } catch (error) {
       // Handle any errors during user creation
-      return res.redirect(500, '/signup').json({ error: 'Server error. Please try again.' });
-      // return res.status(500);
+      // return res.redirect(500, '/signup');
+      return res.status(500).redirect('/signup');
     }
   },
 };

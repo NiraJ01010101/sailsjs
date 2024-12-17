@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>User Authentication</title>
+    <!--STYLES-->
+    <link rel="stylesheet" href="/tailwind.css">
+    <link rel="stylesheet" href="/assets/styles/tailwind.css">
+    <style>
+        /* Custom Toastify Styling */
+        .toastify {
+            border-radius: 12px;
+            padding: 12px 20px;
+            font-size: 14px;
+            font-family: 'Roboto', sans-serif;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+        }
+    </style>
+    <!--STYLES END-->
+</head>
+
+<body class="bg-gray-900 text-white">
+    <div class="flex flex-col items-center justify-center h-screen">
+        <div class="w-full max-w-md">
+            <%- body %>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="/dependencies/sails.io.js"></script>
+</body>
+
+
+</html>

@@ -1,4 +1,3 @@
-// api/policies/isAuthenticated.js
 const jwt = require('jsonwebtoken');
 const secretKey = '1524W2Rfa@10';
 module.exports = function (req, res, next) {
@@ -15,7 +14,7 @@ module.exports = function (req, res, next) {
       if (err) {
         return res.redirect('/login');
       }
-      console.log("decoded",decoded)
+      // console.log("decoded",decoded)
       req.user = decoded;
       return next(); // Proceed to the next action
     });

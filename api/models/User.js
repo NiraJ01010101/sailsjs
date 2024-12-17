@@ -1,4 +1,14 @@
 module.exports = {
+    // tableName: 'user',
+    // identity: 'user',
+    // createdAt: false,
+    // updatedAt: false,
+    // createdOn: true,
+    // updatedOn: true,
+    // autoIncrement: false,
+    // fetchRecordsOnUpdate: true,
+    // fetchRecordsOnCreate: true,
+    // fetchRecordsOnCreateEach: true,
     attributes: {
         username: {
             type: 'string',
@@ -19,6 +29,19 @@ module.exports = {
             isIn: ['super_admin', 'admin', 'user'],
             defaultsTo: 'user',
         },
+        created_on: {
+            type: 'ref',
+            columnType: 'datetime',
+        },
+        updated_on: {
+            type: 'ref',
+            columnType: 'datetime',
+        },
+        status: {
+            type: 'number',
+            defaultsTo: 1, //1:active,0:deactive,99:forgot
+        },
+
     },
 
     // Add lifecycle callback for password hashing before saving

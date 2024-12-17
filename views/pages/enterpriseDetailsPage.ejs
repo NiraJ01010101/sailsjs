@@ -1,0 +1,24 @@
+<div class="container mx-auto p-6 w-full md:w-3/4 lg:w-1/2 bg-gray-800 text-white">
+    <h1 class="text-4xl font-bold mb-8 text-center">Enterprise Details</h1>
+
+    <div class="bg-gray-700 p-6 rounded-lg shadow-lg">
+        <h2 class="text-3xl font-semibold text-gray-100">
+            <%= enterprise.displayName %>
+        </h2>
+        <p class="text-gray-300">Company Name: <%= enterprise.companyName %>
+        </p>
+        <p class="text-gray-300">Contact: <%= enterprise.companyContactNumber %>
+        </p>
+        <p class="text-gray-300">Type: <%= enterprise.companyType %>
+        </p>
+        <p class="text-gray-300">Created On: <%= enterprise.createdOn %>
+        </p>
+        <p class="text-gray-300">Updated On: <%= enterprise.updatedOn %>
+        </p>
+    </div>
+    <h6 class="text-2xl font-bold mt-5 text-center">Users List</h6>
+    <!-- Optional: Add a back button or navigation -->
+    <div class="mt-6 text-center">
+        <a href="/enterprise" class="text-blue-500 hover:text-blue-700">Back to Enterprise List</a>
+    </div>
+</div>

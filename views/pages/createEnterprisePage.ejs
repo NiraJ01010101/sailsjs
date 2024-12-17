@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Enterprise</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+
+<body class="bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-gray-100">
+    <a href="/enterprise" class="w-full mb-6 flex justify-end">
+        <button type="button" class="bg-blue-500 text-white py-3 px-6 rounded-lg shadow-lg hover:bg-blue-600">
+            Show Enterprise List
+        </button>
+    </a>
+    <div class="container mx-auto p-6 w-1/2">
+        <h1 class="text-3xl font-semibold mb-6 text-center">Create New Enterprise</h1>
+
+        <form action="/enterprise/create-enterprise" method="POST" enctype="multipart/form-data"
+            class="bg-gray-800 p-6 rounded-lg shadow-md">
+
+            <div class="mb-4">
+                <label for="companyName" class="block text-sm font-medium ">Company Name</label>
+                <input type="text" id="companyName" name="companyName" required
+                    class="w-full px-4 py-2 mt-2 text-gray-300 bg-gray-700 border border-gray-300 border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    placeholder="Enter Company Name">
+            </div>
+
+            <div class="mb-4">
+                <label for="displayName" class="block text-sm font-medium text-gray-300">Display Name</label>
+                <input type="text" id="displayName" name="displayName" required
+                    class="w-full px-4 py-2 mt-2 text-gray-300 bg-gray-700 border border-gray-300 border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    placeholder="Enter Display Name">
+            </div>
+
+            <div class="mb-4">
+                <label for="companyContactNumber" class="block text-sm font-medium text-gray-300">Company Contact
+                    Number</label>
+                <input type="text" id="companyContactNumber" name="companyContactNumber" required
+                    class="w-full px-4 py-2 mt-2 text-gray-300 bg-gray-700 border border-gray-300 border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    placeholder="Enter Company Contact Number">
+            </div>
+
+            <div class="mb-4">
+                <label for="companyType" class="block text-sm font-medium text-gray-300">Company Type</label>
+                <select id="companyType" name="companyType" required
+                    class="w-full px-4 py-2 mt-2 text-gray-300 bg-gray-700 border border-gray-300 border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <option value="IT">IT</option>
+                    <option value="Finance">Finance</option>
+                    <option value="Retail">Retail</option>
+                    <option value="Manufacturing">Manufacturing</option>
+                    <option value="Other">Other</option>
+                </select>
+            </div>
+
+            <div id="otherInputContainer" class="hidden mb-4">
+                <label for="otherCompanyType" class="block text-sm font-medium text-gray-300">Specify Company
+                    Type</label>
+                <input id="otherCompanyType" name="otherCompanyType" type="text"
+                    class="w-full px-4 py-2 mt-2 text-gray-300 bg-gray-700 border border-gray-300 border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    placeholder="Enter custom company type">
+            </div>
+
+            <div class="flex justify-center mt-14">
+                <button type="submit"
+                    class="bg-blue-500 text-white px-6 py-3 rounded-lg hover:bg-blue-600 transition duration-200">Save
+                    Enterprise</button>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        // Get the select and the input container
+        const companyTypeSelect = document.getElementById('companyType');
+        const otherInputContainer = document.getElementById('otherInputContainer');
+        const otherCompanyTypeInput = document.getElementById('otherCompanyType');
+
+        // Listen for changes on the select element
+        companyTypeSelect.addEventListener('change', function () {
+            if (companyTypeSelect.value === 'Other') {
+                // Show the input field if "Other" is selected
+                otherInputContainer.classList.remove('hidden');
+                otherCompanyTypeInput.setAttribute('required', 'required');
+            } else {
+                // Hide the input field and remove the "required" attribute if another option is selected
+                otherInputContainer.classList.add('hidden');
+                otherCompanyTypeInput.removeAttribute('required');
+            }
+        });
+    </script>
+</body>
+
+</html>
