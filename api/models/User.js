@@ -29,6 +29,9 @@ module.exports = {
             isIn: ['super_admin', 'admin', 'user'],
             defaultsTo: 'user',
         },
+        enterpriseId: {
+            type: 'string',
+        },
         created_on: {
             type: 'ref',
             columnType: 'datetime',

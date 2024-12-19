@@ -1,4 +1,4 @@
-<div class="container mx-auto p-8">
+<div class="container mx-auto p-8 relative">
     <h1 class="text-3xl font-semibold mb-4">User List</h1>
 
     <% if (users.length===0) { %>
@@ -27,16 +27,13 @@
                             <td class="py-2 px-4">
                                 <%= user.role %>
                             </td>
-                            <td class="py-2 px-4">
-                                <select name="<%= user.id %>" class="bg-gray-200 text-black py-1 px-3 rounded-md"
+                            <td class="py-2 px-4 ">
+                                <select name="<%= user.id %>" class="bg-gray-200 text-black py-2 px-4 rounded-md"
                                     onchange="updateUserStatus(event)">
-                                    <option>Action</option>
-                                    <option value="0" %>
-                                        >Deactivate</option>
-                                    <option value="1" %>
-                                        >Activate</option>
-                                    <option value="99" %>
-                                        >Forget</option>
+                                    <option value="" disabled selected>Action</option>
+                                    <option value="0" <%=user.status===0 ? 'selected' : '' %>>Deactivate</option>
+                                    <option value="1" <%=user.status===1 ? 'selected' : '' %>>Activate</option>
+                                    <option value="99" <%=user.status===99 ? 'selected' : '' %>>Forget</option>
                                 </select>
                             </td>
                         </tr>
@@ -44,35 +41,87 @@
                 </tbody>
             </table>
             <% } %>
+                <!-- Modal -->
+                <div id="popup-modal" tabindex="-1"
+                    class="overflow-y-auto overflow-x-hidden fixed top-0 left-0 right-0 bottom-0 z-50 hidden flex justify-center items-center w-full h-full">
+                    <div class="relative p-4 w-full max-w-md max-h-full bg-white rounded-lg shadow dark:bg-gray-700">
+                        <button type="button"
+                            class="absolute top-3 right-3 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white"
+                            onclick="closeModal()">
+                            <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
+                                viewBox="0 0 14 14">
+                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                                    stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
+                            </svg>
+                            <span class="sr-only">Close modal</span>
+                        </button>
+                        <div class="p-4 text-center">
+                            <svg class="mx-auto mb-4 text-gray-400 w-12 h-12 dark:text-gray-200" aria-hidden="true"
+                                xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
+                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                                    stroke-width="2" d="M10 11V6m0 8h.01M19 10a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                            </svg>
+                            <h3 class="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">Are you sure you want
+                                to update the status of this user?</h3>
+                            <button id="confirm-action" type="button" onclick="handleStatusUpdate()"
+                                class="text-white bg-red-600 hover:bg-red-800 font-medium rounded-lg text-sm inline-flex items-center px-5 py-2.5 text-center">Yes,
+                                I'm sure</button>
+                            <button type="button"
+                                class="py-2.5 px-5 ms-3 text-sm font-medium text-gray-900 bg-white rounded-lg border border-gray-200 hover:bg-gray-100 focus:outline-none focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700"
+                                onclick="closeModal()">No, cancel</button>
+                        </div>
+                    </div>
+                </div>
+               
 </div>
 
 <script>
+    let selectedUserId = null;
+    let selectedStatus = null;
+
     function updateUserStatus(event) {
-        const { value, name: userId } = event.target;
-        console.log("value+-+-", value)
-        console.log("name+-+-", userId)
-        // fetch(`/users/update-status/${userId}`, {
-        //     method: 'POST',
-        //     headers: {
-        //         'Content-Type': 'application/json'
-        //     },
-        //     body: JSON.stringify({ status: status }) // Send the status in the request body
-        // })
-        // .then(response => {
-        //     if (!response.ok) {
-        //         throw new Error('Failed to update status');
-        //     }
-        //     return response.json(); // Assuming the API returns JSON response
-        // })
-        // .then(data => {
-        //     alert('Status updated successfully!');
-        //     // Optionally, update the UI based on the response
-        //     console.log(data);
-        // })
-        // .catch(error => {
-        //     alert('Error updating status: ' + error.message);
-        //     console.error(error);
-        // });
+        selectedUserId = event.target.name;
+        selectedStatus = event.target.value;
+        document.getElementById('popup-modal').classList.remove('hidden');
+    }
+
+    function closeModal() {
+        document.getElementById('popup-modal').classList.add('hidden');
+    }
+
+    async function handleStatusUpdate() {
+        // Check if selectedUserId and selectedStatus are valid
+        if (!selectedUserId || selectedStatus === null) {
+            alert('Invalid user or status');
+            return;
+        }
+        const requestOptions = {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ status: selectedStatus }),
+        };
+        await fetch(`/users/update-status/${selectedUserId}`, requestOptions)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data.status == 200) {
+                    closeModal();
+                    // alert('Status updated successfully!');
+                } else {
+                    alert('Failed to update status.');
+                }
+            })
+            .catch(error => {
+                console.error('Error updating status:', error);
+                alert('Error updating status.');
+                closeModal();
+            })
     }
 
 </script>

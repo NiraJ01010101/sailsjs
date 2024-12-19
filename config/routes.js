@@ -15,8 +15,10 @@ module.exports.routes = {
   'GET /enterprise/createEnterprise': 'EnterpriseController.createEnterpriseView',
   'GET /enterprise/:id': 'EnterpriseController.viewEnterprise',
   'POST /enterprise/create-enterprise': 'EnterpriseController.createEnterprise',
+  'POST /enterprise/addUser': 'EnterpriseController.addUser',
+  'DELETE /enterprise/delete-user/:id': 'EnterpriseController.deleteUserInEnterprise',
 
   // Users
   'GET /users': 'UserController.users',
-  'GET /users/update-status/:id': 'UserController.updateStatus',// updateStatus a user
+  'POST /users/update-status/:id': 'UserController.updateStatus',
 };

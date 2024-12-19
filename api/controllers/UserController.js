@@ -16,7 +16,6 @@ module.exports = {
     },
     users: async function (req, res) {
         const usersList = await User.find();
-
         const users = usersList.map(user =>
             user.id === req.user.id ? { ...user, username: user.username + " ( you )" } : user
         );
@@ -24,21 +23,38 @@ module.exports = {
         return res.view('pages/userListPage', { users });
     },
     updateStatus: async function (req, res) {
-        const userId = req.params.userId;
+        const userId = req.params.id;
         const { status } = req.body;
-        console.log("userId", userId)
-        console.log("status", status)
+        if (!userId || status === undefined || status === null) {
+            return res.status(400).json({ message: "Invalid user ID or status." });
+        }
+
         try {
-            // const user = await User.findOne({ id: userId });
             const updatedUser = await User.updateOne({ id: userId })
                 .set({ status: status });
-            console.log("updatedUser", updatedUser)
-            return res.status(200).redirect('/users');
+            if (updatedUser) {
+                return res.status(200).json({ message: "Status updated successfully!", status: 200 });
+            }
         } catch (err) {
-            console.log("error", err)
-            return res.status(500).json({ error: err });
-            // return res.serverError(err);
+            console.log("error", err);
+            return res.status(500).json({ error: "Internal server error. Please try again later." });
         }
     },
+    // deleteUser: async function (req, res) {
+    //     const userId = req.param('id');
+
+    //     try {
+    //         // Find and delete the user by ID
+    //         const deletedUser = await User.destroy({ id: userId }).fetch();
+
+    //         if (deletedUser.length === 0) {
+    //             return res.json({ success: false, message: 'User not found' });
+    //         }
+
+    //         return res.json({ success: true, message: 'User deleted successfully' });
+    //     } catch (err) {
+    //         return res.serverError(err);
+    //     }
+    // }
 
 };
