@@ -28,6 +28,7 @@ module.exports.policies = {
   },
   EnterpriseController: {
     'enterprise/*': 'isAuthenticated',
+    'enterprise': 'isAdmin',
     'createEnterprise': 'isAuthenticated',
   }
 

@@ -6,13 +6,16 @@ module.exports = {
             const EnterpriseList = await Enterprise.find();
             // console.log("Enterprise", EnterpriseList)
             if (EnterpriseList && EnterpriseList.length > 0) {
+                console.log("res>>>>1",res)
                 return res.view('pages/enterprisePage', { enterprisePageList: EnterpriseList });
             } else {
+                console.log("res>>>>2",res)
                 return res.view('pages/enterprisePage', { enterprisePageList: null });
             }
 
         } catch (error) {
             console.error('Error loading enterprise list:', error);
+            console.log("error>>>>1",error)
             return res.status(500).json({ error: 'An error occurred while loading the enterprise list. Please try again later.' });
         }
     },

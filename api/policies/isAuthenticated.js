@@ -1,6 +1,6 @@
-const jwt = require('jsonwebtoken');
-const secretKey = '1524W2Rfa@10';
-module.exports = function (req, res, next) {
+const verifyToken = require('./jwtUtils'); // Import the utility function
+
+module.exports = async function (req, res, next) {
   try {
     // Get token from the cookies
     const token = req.cookies.authToken;
@@ -9,15 +9,10 @@ module.exports = function (req, res, next) {
       return res.redirect('/login');
     }
 
-    // Verify token using the secret key
-    jwt.verify(token, secretKey, (err, decoded) => {
-      if (err) {
-        return res.redirect('/login');
-      }
-      // console.log("decoded",decoded)
-      req.user = decoded;
-      return next(); // Proceed to the next action
-    });
+    const decoded = await verifyToken(token);
+
+    req.user = decoded;
+    return next(); 
 
   } catch (error) {
     console.error('Error in token verification middleware:', error);
